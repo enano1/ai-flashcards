@@ -36,7 +36,11 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 npm install Firebase
+
 npm install stripe
+
 npm install @clerk/nextjs
+
 npm install @mui/material @emotion/react @emotion/styled
+
 
