@@ -4,13 +4,14 @@ import { useUser } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore'
 import { db } from '@/firebase'
-import { Container, Box, Typography, Card, CardActionArea, CardContent, Grid } from "@mui/material";
+import { Container, Grid, Card, CardActionArea, CardContent, Typography, Box } from "@mui/material";
 import { useSearchParams } from 'next/navigation'
 
 export default function Flashcard() {
     const { isLoaded, isSignedIn, user } = useUser();
     const [flashcards, setFlashcards] = useState([]);
     const [flipped, setFlipped] = useState([]);
+    const [deckName, setDeckName] = useState('');
 
     const searchParams = useSearchParams();
     const search = searchParams.get('id');
@@ -18,18 +19,26 @@ export default function Flashcard() {
     useEffect(() => {
         async function getFlashcard() {
             if (!search || !user) return
-            const colRef = collection(doc(collection(db, 'users'), user.id), search)
+            const docRef = doc(collection(db, 'users'), user.id);
+            const colRef = collection(docRef, search);
 
-            const docs = await getDocs(colRef)
-            const flashcards = []
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const deckData = docSnap.data();
+                setDeckName(deckData.name || 'Flashcards');
+            }
+
+            const docs = await getDocs(colRef);
+            const flashcards = [];
 
             docs.forEach((doc) => {
-                flashcards.push({ id: doc.id, ...doc.data() })
-            })
-            setFlashcards(flashcards)
+                flashcards.push({ id: doc.id, ...doc.data() });
+            });
+
+            setFlashcards(flashcards);
         }
-        getFlashcard()
-    }, [user, search])
+        getFlashcard();
+    }, [user, search]);
 
     const handleCardClick = (index) => {
         setFlipped((prev) => ({
@@ -44,10 +53,10 @@ export default function Flashcard() {
 
     return (
         <Container maxWidth='md'>
-            <Typography variant="h5" align="center" sx={{ mt: 4 }}>
-                Flashcards Preview
+            <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 'bold', color: '#00796B' }}>
+                {deckName} Preview
             </Typography>
-            <Grid container spacing={3} sx={{ mt: 4, justifyContent: 'center', alignItems: 'center' }}>
+            <Grid container spacing={4} sx={{ mt: 4, justifyContent: 'center', alignItems: 'center' }}>
                 {flashcards.map((flashcard, index) => (
                     <Grid item xs={12} sm={6} md={4} key={index}>
                         <Card sx={{ perspective: '1000px', height: '250px' }}>
