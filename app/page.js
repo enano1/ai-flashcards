@@ -10,11 +10,20 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 export default function Home() {
     const theme = createTheme({
         palette: {
+            mode: 'dark', // Set dark mode
             primary: {
                 main: '#1976d2',
             },
             secondary: {
                 main: '#dc004e',
+            },
+            background: {
+                default: '#121212', // Dark background color
+                paper: '#1e1e1e',   // Dark color for paper elements
+            },
+            text: {
+                primary: '#ffffff', // White text
+                secondary: '#b0b0b0', // Grey text for secondary content
             },
         },
         typography: {
@@ -56,16 +65,24 @@ export default function Home() {
                 </Head>
                 <AppBar position="static" elevation={0} color="transparent">
                     <Toolbar>
-                        <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 700 }}>
-                            Flashcard SaaS
-                        </Typography>
+                        <Link href="/" passHref>
+                            <Typography variant="h6" sx={{ fontWeight: 700, cursor: 'pointer', color: 'white', textDecoration: 'none' }}>
+                                Flashcard SaaS
+                            </Typography>
+                        </Link>
+                        <Box sx={{ flexGrow: 1 }} />
+                        <SignedIn>
+                            <Link href="/flashcards" passHref>
+                                <Button sx={{ textWeight: 700 ,color: 'white', textTransform: 'none', textDecoration: 'none', '&:hover': { color: 'white' } }}>
+                                    View My Flashcards
+                                </Button>
+                            </Link>
+                            <UserButton />
+                        </SignedIn>
                         <SignedOut>
                             <Button color="primary" href="/sign-in">Login</Button>
                             <Button color="secondary" href="/sign-up" sx={{ ml: 2 }}>Sign Up</Button>
                         </SignedOut>
-                        <SignedIn>
-                            <UserButton />
-                        </SignedIn>
                     </Toolbar>
                 </AppBar>
 
@@ -140,7 +157,7 @@ export default function Home() {
                                 my: 2,
                                 p: 4,
                                 border: '1px solid',
-                                borderColor: 'grey.300',
+                                borderColor: 'grey.800', // Adjusted border color for dark theme
                                 borderRadius: 2,
                                 boxShadow: 2,
                             }}>
@@ -164,7 +181,7 @@ export default function Home() {
                                 my: 2,
                                 p: 4,
                                 border: '1px solid',
-                                borderColor: 'grey.300',
+                                borderColor: 'grey.800', // Adjusted border color for dark theme
                                 borderRadius: 2,
                                 boxShadow: 2,
                             }}>
